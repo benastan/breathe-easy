@@ -1,0 +1,27 @@
+{
+  "name": "breathe-easy",
+  "version": "0.0.0",
+  "description": "An extensible, JavaScript REST client base class.",
+  "main": "dist/breathe-easy.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benastan/breathe-easy.git"
+  },
+  "dependencies": {
+    "browserify": "*",
+    "chai": "*",
+    "grunt": "*",
+    "grunt-browserify": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-shell": "*",
+    "mocha": "1.9.0"
+  },
+  "author": "Ben Bergstein",
+  "license": "BSD"
+}
