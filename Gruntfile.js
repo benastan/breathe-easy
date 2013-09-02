@@ -5,6 +5,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.initConfig({
     watch: {
       foursquare: {
@@ -25,10 +26,7 @@ module.exports = function(grunt) {
     browserify: {
       'default': {
         src: ['dist/breathe-easy.js'],
-        dest: 'build/breathe-easy.js',
-        options: {
-          external: [ 'breathe-easy' ]
-        }
+        dest: 'build/breathe-easy.js'
       },
       test: {
         src: ['test/**/*.js'],
@@ -50,6 +48,20 @@ module.exports = function(grunt) {
           { src: [ 'node_modules/mocha/mocha.css' ], dest: 'public/assets/stylesheets/mocha.css' }
         ]
       }
+    },
+    compress: {
+      'default': {
+        options: {
+          mode: 'gzip'
+        },
+        files: [
+          {
+            src: 'build/breathe-easy.min.js',
+            dest: 'build/breathe-easy.min.js',
+            ext: ''
+          }
+        ]
+      }
     }
   });
   grunt.registerTask(
@@ -57,7 +69,8 @@ module.exports = function(grunt) {
     [
       'coffee:default',
       'browserify:default',
-      'uglify:default'
+      'uglify:default',
+      'compress:default'
     ]
   );
 };

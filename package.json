@@ -2,6 +2,9 @@
   "name": "breathe-easy",
   "version": "0.0.0",
   "description": "An extensible, JavaScript REST client base class.",
+  "directories": {
+    "lib": "dist/breathe-easy"
+  },
   "main": "dist/breathe-easy.js",
   "scripts": {
     "test": "npm test"
@@ -16,6 +19,7 @@
     "grunt": "*",
     "grunt-browserify": "*",
     "grunt-contrib-coffee": "*",
+    "grunt-contrib-compress": "*",
     "grunt-contrib-copy": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",

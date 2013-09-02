@@ -16,7 +16,6 @@ class Base
 
       {type, data, urlArgs, success, error} = type
 
-
     if typeof data is 'string'
 
       urlArgs.push(data)
@@ -28,11 +27,11 @@ class Base
       url: @url.apply(@, @baseParams().concat(urlArgs))
       data: data
 
-    $.ajax(ajaxOptions)
+    xhr = $.ajax(ajaxOptions)
 
-      .done (rsp) =>
+    @beforeSend(xhr)
 
-        @attributes[key] = val for key, val of rsp.response.user
+    xhr
 
   post: (urlArgs...) ->
 
@@ -41,6 +40,8 @@ class Base
   get: (urlArgs...) ->
 
     @perform.apply(@, ['get'].concat(urlArgs))
+
+  beforeSend: (xhr) -> # Implement in subclasses.
 
   Builder: require('./builder')
 

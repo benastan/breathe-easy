@@ -39,8 +39,7 @@
     };
 
     Base.prototype.perform = function() {
-      var ajaxOptions, data, error, success, type, urlArgs, _i, _ref,
-        _this = this;
+      var ajaxOptions, data, error, success, type, urlArgs, xhr, _i, _ref;
       type = arguments[0], urlArgs = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), data = arguments[_i++];
       if (!this.client.usePromises) {
         _ref = type, type = _ref.type, data = _ref.data, urlArgs = _ref.urlArgs, success = _ref.success, error = _ref.error;
@@ -54,16 +53,9 @@
         url: this.url.apply(this, this.baseParams().concat(urlArgs)),
         data: data
       };
-      return $.ajax(ajaxOptions).done(function(rsp) {
-        var key, val, _ref1, _results;
-        _ref1 = rsp.response.user;
-        _results = [];
-        for (key in _ref1) {
-          val = _ref1[key];
-          _results.push(_this.attributes[key] = val);
-        }
-        return _results;
-      });
+      xhr = $.ajax(ajaxOptions);
+      this.beforeSend(xhr);
+      return xhr;
     };
 
     Base.prototype.post = function() {
@@ -77,6 +69,8 @@
       urlArgs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return this.perform.apply(this, ['get'].concat(urlArgs));
     };
+
+    Base.prototype.beforeSend = function(xhr) {};
 
     Base.prototype.Builder = require('./builder');
 
@@ -165,16 +159,28 @@
 
 },{}],4:[function(require,module,exports){
 (function() {
-  var Client;
+  var Client, settings;
+
+  settings = {
+    usePromises: true
+  };
 
   Client = (function() {
     function Client(_arguments) {
       this["arguments"] = _arguments;
-      this.usePromises = this["arguments"].usePromises;
+      this.usePromises = $.extend(true, settings, this["arguments"]).usePromises;
       this.setup();
     }
 
     Client.prototype.setup = function() {};
+
+    Client.prototype.usePromises = function(usePromises) {
+      if (typeof usePromises === void 0) {
+        return settings.usePromises = true;
+      } else {
+        return settings.usePromises = usePromises;
+      }
+    };
 
     return Client;
 
