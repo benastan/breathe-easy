@@ -7,6 +7,9 @@
       attrs || (attrs = {});
       this.client = attrs.client || this.client;
       this.attributes = {};
+      if (typeof this.setup === 'function') {
+        this.setup.apply(this, arguments);
+      }
     }
 
     Base.prototype["new"] = function(attributes) {
