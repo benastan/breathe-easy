@@ -13,6 +13,10 @@ module.exports = function(grunt) {
       'default': {
         src: ['dist/breathe-easy.js'],
         dest: 'build/breathe-easy.js'
+      },
+      'smoother': {
+        src: ['dist/smoother.js'],
+        dest: 'build/smoother.js'
       }
     },
     coffee: {
@@ -34,6 +38,11 @@ module.exports = function(grunt) {
           {
             src: 'build/breathe-easy.min.js',
             dest: 'build/breathe-easy.min.js',
+            ext: ''
+          },
+          {
+            src: 'build/smoother.min.js',
+            dest: 'build/smoother.min.js',
             ext: ''
           }
         ]
@@ -62,6 +71,10 @@ module.exports = function(grunt) {
       'default': {
         src: ['build/breathe-easy.js'],
         dest: 'build/breathe-easy.min.js'
+      },
+      'smoother': {
+        src: ['build/smoother.js'],
+        dest: 'build/smoother.min.js'
       }
     },
     watch: {
@@ -77,6 +90,8 @@ module.exports = function(grunt) {
       'coffee:default',
       'browserify:default',
       'uglify:default',
+      'browserify:smoother',
+      'uglify:smoother',
       'compress:default'
     ]
   );

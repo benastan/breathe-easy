@@ -1,28 +1,5 @@
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var BreatheEasy;
-
-  BreatheEasy = (function() {
-    function BreatheEasy() {}
-
-    BreatheEasy.Client = require('./breathe-easy/client');
-
-    BreatheEasy.Base = require('./breathe-easy/base');
-
-    return BreatheEasy;
-
-  })();
-
-  if (typeof window !== 'undefined') {
-    window.BreatheEasy = BreatheEasy;
-  }
-
-  module.exports = BreatheEasy;
-
-}).call(this);
-
-},{"./breathe-easy/base":2,"./breathe-easy/client":4}],2:[function(require,module,exports){
-(function() {
   var Base,
     __slice = [].slice;
 
@@ -124,7 +101,7 @@
 
 }).call(this);
 
-},{"./builder":3}],3:[function(require,module,exports){
+},{"./builder":2}],2:[function(require,module,exports){
 (function() {
   var Builder,
     __slice = [].slice;
@@ -222,7 +199,7 @@
 
 }).call(this);
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function() {
   var Client, settings,
     __slice = [].slice;
@@ -258,5 +235,79 @@
 
 }).call(this);
 
-},{}]},{},[1])
+},{}],4:[function(require,module,exports){
+(function() {
+  var Base, Client, _ref, _ref1,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Client = require('./breathe-easy/client');
+
+  Base = require('./breathe-easy/base');
+
+  Base = (function(_super) {
+    __extends(Base, _super);
+
+    function Base() {
+      _ref = Base.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Base.extend = function(endpoints) {
+      var klass, _ref1;
+      return klass = (function(_super1) {
+        __extends(klass, _super1);
+
+        function klass() {
+          _ref1 = klass.__super__.constructor.apply(this, arguments);
+          return _ref1;
+        }
+
+        klass.endpoints(endpoints);
+
+        return klass;
+
+      })(this);
+    };
+
+    return Base;
+
+  })(Base);
+
+  Client = (function(_super) {
+    __extends(Client, _super);
+
+    function Client() {
+      _ref1 = Client.__super__.constructor.apply(this, arguments);
+      return _ref1;
+    }
+
+    Client["new"] = function(endpoint, setup) {
+      var client;
+      client = new Client();
+      client.endpoint = endpoint;
+      client.setup = setup;
+      return client;
+    };
+
+    Client.prototype.addEndpoint = function(endpoints) {
+      var klass;
+      klass = Base.extend(endpoints);
+      klass.prototype.client = this;
+      return klass;
+    };
+
+    return Client;
+
+  })(Client);
+
+  if (typeof window !== 'undefined') {
+    window.Smoother = Client;
+  }
+
+  module.exports = Client;
+
+}).call(this);
+
+},{"./breathe-easy/base":1,"./breathe-easy/client":3}]},{},[4])
 ;
