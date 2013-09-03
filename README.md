@@ -21,16 +21,19 @@ Let's say we want to represent GitHub's users api. Start with the client:
     Github.register('User', function() {
       this.base('users');
       this.member(function() {
-        this.setup(function(userId) {
-          this.userId = userId;
+        this.setup(function(username) {
+          this.username = username;
         });
         this.base(function() {
-          return this.userId;
+          return this.username;
         });
+        this.get('gists');
       });
     });
-    u = Github.User.new(1);
+    u = Github.User.new('benastan');
     u.url();
-    => https://api.github.com/users/1
+    => https://api.github.com/users/benastan
     u.get().done(function(user) { console.log(user.id); });
-    => 1825798
+    => 588040
+    u.gists().done(function(gists) { console.log(gists[0].description); });
+    => Stupid simple rails modals.
