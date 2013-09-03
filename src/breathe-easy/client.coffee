@@ -4,11 +4,11 @@ settings =
 
 class Client
 
-  constructor: (@arguments) ->
+  constructor: (@arguments...) ->
 
     {@usePromises} = $.extend(true, settings, @arguments)
 
-    @setup()
+    @setup.apply(@, @arguments)
 
   setup: ->
 

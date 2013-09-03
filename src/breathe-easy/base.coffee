@@ -75,7 +75,7 @@ class Base
 
     @perform.apply(@, ['get'].concat(urlArgs))
 
-  alterXHROptions: (xhr) -> # Implement in subclasses.
+  alterXHROptions: (options) -> options # Implement in subclasses.
 
   Builder: require('./builder')
 

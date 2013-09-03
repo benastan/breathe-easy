@@ -77,7 +77,9 @@
       return this.perform.apply(this, ['get'].concat(urlArgs));
     };
 
-    Base.prototype.alterXHROptions = function(xhr) {};
+    Base.prototype.alterXHROptions = function(options) {
+      return options;
+    };
 
     Base.prototype.Builder = require('./builder');
 

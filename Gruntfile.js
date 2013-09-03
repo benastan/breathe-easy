@@ -13,10 +13,6 @@ module.exports = function(grunt) {
       'default': {
         src: ['dist/breathe-easy.js'],
         dest: 'build/breathe-easy.js'
-      },
-      test: {
-        src: ['test/**/*.js'],
-        dest: 'build/test.js'
       }
     },
     coffee: {
@@ -58,7 +54,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'public/test.js': [ 'test/breathe-easy.js' ]
+          'public/test.js': [ './test.js' ]
         }
       }
     },
@@ -70,7 +66,7 @@ module.exports = function(grunt) {
     },
     watch: {
       foursquare: {
-        files: ['src/**/*.coffee', 'test/**/*.js', 'public/**/*'],
+        files: ['src/**/*.coffee', 'test.js', 'public/**/*'],
         tasks: ['default', 'test']
       }
     }

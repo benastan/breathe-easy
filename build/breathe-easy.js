@@ -101,7 +101,9 @@
       return this.perform.apply(this, ['get'].concat(urlArgs));
     };
 
-    Base.prototype.alterXHROptions = function(xhr) {};
+    Base.prototype.alterXHROptions = function(options) {
+      return options;
+    };
 
     Base.prototype.Builder = require('./builder');
 
@@ -221,17 +223,20 @@
 
 },{}],4:[function(require,module,exports){
 (function() {
-  var Client, settings;
+  var Client, settings,
+    __slice = [].slice;
 
   settings = {
     usePromises: true
   };
 
   Client = (function() {
-    function Client(_arguments) {
+    function Client() {
+      var arguments, _arguments;
+      _arguments = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       this["arguments"] = _arguments;
       this.usePromises = $.extend(true, settings, this["arguments"]).usePromises;
-      this.setup();
+      this.setup.apply(this, this["arguments"]);
     }
 
     Client.prototype.setup = function() {};
