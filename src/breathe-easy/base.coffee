@@ -8,6 +8,8 @@ class Base
 
     @attributes = {}
 
+    @setup.apply(@, arguments) if typeof @setup is 'function'
+
   new: (attributes) ->
 
     attributes ||= {}

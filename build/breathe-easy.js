@@ -31,6 +31,9 @@
       attrs || (attrs = {});
       this.client = attrs.client || this.client;
       this.attributes = {};
+      if (typeof this.setup === 'function') {
+        this.setup.apply(this, arguments);
+      }
     }
 
     Base.prototype["new"] = function(attributes) {
@@ -198,6 +201,14 @@
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       args.unshift('get');
       return this.define.apply(this, args);
+    };
+
+    Builder.prototype.member = function(endpoints) {
+      return this["class"].prototype.Instance = this["class"].extend(endpoints);
+    };
+
+    Builder.prototype.setup = function(setup) {
+      return this["class"].prototype.setup = setup;
     };
 
     Builder.prototype.post = function() {

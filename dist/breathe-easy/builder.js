@@ -73,6 +73,14 @@
       return this.define.apply(this, args);
     };
 
+    Builder.prototype.member = function(endpoints) {
+      return this["class"].prototype.Instance = this["class"].extend(endpoints);
+    };
+
+    Builder.prototype.setup = function(setup) {
+      return this["class"].prototype.setup = setup;
+    };
+
     Builder.prototype.post = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
