@@ -42,8 +42,8 @@
 
   UserInstance = __extend(User);
 
-  UserInstance.prototype.setup = function() {
-    this.username = this['arguments'][0].username;
+  UserInstance.prototype.setup = function(attrs) {
+    this.username = attrs.username;
   };
 
   UserInstance.endpoints(function() {
@@ -62,8 +62,8 @@
 
   GistInstance = __extend(Gist);
 
-  GistInstance.prototype.setup = function() {
-    this.gistId = this['arguments'][0].gistId;
+  GistInstance.prototype.setup = function(options) {
+    this.gistId = options.gistId;
   };
 
   GistInstance.endpoints(function() {

@@ -66,9 +66,19 @@ class Builder
   get: (args...) ->
     args.unshift('get')
     @define.apply(@, args)
+
+  member: (endpoints) ->
+
+    @class::Instance = @class.extend(endpoints)
+
+  setup: (setup) ->
+
+    @class::setup = setup
+
   post: (args...) ->
     args.unshift('post')
     @define.apply(@, args)
+
   put: (args...) ->
     args.unshift('put')
     @define.apply(@, args)

@@ -32,6 +32,10 @@
       })(this);
     };
 
+    Base.member = function(endpoints) {
+      return this.prototype.Instance = this.extend(endpoints);
+    };
+
     return Base;
 
   })(Base);
@@ -48,14 +52,17 @@
       var client;
       client = new Client();
       client.endpoint = endpoint;
-      client.setup = setup;
+      if (typeof setup === 'function') {
+        client.setup = setup;
+      }
       return client;
     };
 
-    Client.prototype.addEndpoint = function(endpoints) {
+    Client.prototype.register = function(endpointName, endpoints) {
       var klass;
       klass = Base.extend(endpoints);
       klass.prototype.client = this;
+      this[endpointName] = new klass;
       return klass;
     };
 

@@ -9,6 +9,10 @@ class Base extends Base
 
       @endpoints(endpoints)
 
+  @member = (endpoints) ->
+
+    @::Instance = @extend(endpoints)
+
 class Client extends Client
 
   @new = (endpoint, setup) ->
@@ -17,15 +21,17 @@ class Client extends Client
 
     client.endpoint = endpoint
 
-    client.setup = setup
+    client.setup = setup if typeof setup is 'function'
 
     client
 
-  addEndpoint: (endpoints) ->
+  register: (endpointName, endpoints) ->
 
     klass = Base.extend(endpoints)
 
     klass::client = this
+
+    @[endpointName] = new klass
 
     klass
 
