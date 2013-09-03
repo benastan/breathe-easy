@@ -3,8 +3,9 @@
     __slice = [].slice;
 
   Base = (function() {
-    function Base(_arg) {
-      this.client = _arg.client;
+    function Base(attrs) {
+      attrs || (attrs = {});
+      this.client = attrs.client || this.client;
       this.attributes = {};
     }
 

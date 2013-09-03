@@ -1,13 +1,19 @@
 class Base
 
-  constructor: ({@client}) ->
+  constructor: (attrs) ->
+
+    attrs ||= {}
+
+    @client = attrs.client || @client
 
     @attributes = {}
 
   new: (attributes) ->
 
     attributes ||= {}
+
     attributes.client = @client
+
     new @Instance(attributes)
 
   perform: (type, urlArgs..., data) ->
