@@ -15,9 +15,9 @@ That being said, it also provides an object called `Smoother` that removes much 
 
 Include `smoother.min.js` and you're good to go. 
 
-Let's say we want to represent GitHub's users api. Start with the client:
+Let's say we want to represent GitHub's users api.
 
-    Github = client = Smoother.new('https://api.github.com')
+    Github = Smoother.new('https://api.github.com');
     Github.register('User', function() {
       this.base('users');
       this.member(function() {
@@ -37,3 +37,5 @@ Let's say we want to represent GitHub's users api. Start with the client:
     => 588040
     u.gists().done(function(gists) { console.log(gists[0].description); });
     => Stupid simple rails modals.
+    
+Sweet damn! An API Consumer in 10 lines.
