@@ -50,12 +50,37 @@
       }
       ajaxOptions = {
         type: type,
-        url: this.url.apply(this, this.baseParams().concat(urlArgs)),
-        data: data
+        url: this.url.apply(this, urlArgs),
+        data: this.processData(data)
       };
+      ajaxOptions = this.alterXHROptions(ajaxOptions);
       xhr = $.ajax(ajaxOptions);
-      this.beforeSend(xhr);
       return xhr;
+    };
+
+    Base.prototype.processData = function(data) {
+      return data;
+    };
+
+    Base.prototype.urlBase = function() {
+      var base, param, params, urlArgs, _i, _len;
+      urlArgs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      params = this.baseParams;
+      if (urlArgs.length) {
+        params = params.concat(urlArgs);
+      }
+      base = [];
+      for (_i = 0, _len = params.length; _i < _len; _i++) {
+        param = params[_i];
+        base.push(typeof param === 'function' ? param.apply(this) : param);
+      }
+      return base;
+    };
+
+    Base.prototype.url = function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return [this.client.endpoint].concat(this.urlBase.apply(this, args)).join('/');
     };
 
     Base.prototype.post = function() {
@@ -64,13 +89,19 @@
       return this.perform.apply(this, ['post'].concat(urlArgs));
     };
 
+    Base.prototype.put = function() {
+      var urlArgs;
+      urlArgs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this.perform.apply(this, ['put'].concat(urlArgs));
+    };
+
     Base.prototype.get = function() {
       var urlArgs;
       urlArgs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return this.perform.apply(this, ['get'].concat(urlArgs));
     };
 
-    Base.prototype.beforeSend = function(xhr) {};
+    Base.prototype.alterXHROptions = function(xhr) {};
 
     Base.prototype.Builder = require('./builder');
 
@@ -96,57 +127,88 @@
     __slice = [].slice;
 
   Builder = (function() {
+    Builder.prototype.base = function() {
+      var baseParams, param, params;
+      baseParams = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      params = [];
+      if (typeof baseParams[0] !== 'function' && typeof baseParams[0] !== 'string') {
+        baseParams = baseParams[0];
+      }
+      while (param = baseParams.shift()) {
+        if (typeof param !== 'function') {
+          param = (function(_param) {
+            return _param;
+          })(param);
+        }
+        params.push(param);
+      }
+      if (typeof this["class"].prototype.baseParams !== 'undefined') {
+        return this["class"].prototype.baseParams = this["class"].prototype.baseParams.concat(params);
+      } else {
+        return this["class"].prototype.baseParams = params;
+      }
+    };
+
     function Builder(_arg) {
       this["class"] = _arg["class"];
     }
 
-    Builder.prototype.base = function() {
-      var baseParams;
-      baseParams = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      if (typeof baseParams[0] === 'function') {
-        baseParams = baseParams[0];
-      } else {
-        baseParams = function() {
-          return baseParams;
-        };
-      }
-      if (typeof this["class"].prototype.baseParams === 'function') {
-        (function(superBase, subBase) {
-          return baseParams = function() {
-            while (typeof superBase === 'function') {
-              superBase = superBase.apply(this);
-            }
-            return superBase.concat(subBase.apply(this));
+    Builder.prototype.data = function(cb) {
+      return this["class"].prototype.processData = function(data) {
+        return cb.apply(this, [data]);
+      };
+    };
+
+    Builder.prototype.define = function() {
+      var arg, args, type, _i, _len, _results,
+        _this = this;
+      type = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      _results = [];
+      for (_i = 0, _len = args.length; _i < _len; _i++) {
+        arg = args[_i];
+        _results.push((function(_arg) {
+          var camelize, fn, otherFn;
+          fn = function(data) {
+            return this[type](_arg, data);
           };
-        })(this["class"].prototype.baseParams, baseParams);
+          fn.type = type;
+          camelize = function(type, arg) {
+            return "" + type + (arg[0].toUpperCase()) + (arg.substr(1));
+          };
+          switch (typeof _this["class"].prototype[_arg]) {
+            case 'function':
+              otherFn = _this["class"].prototype[_arg];
+              _this["class"].prototype[camelize(otherFn.type, _arg)] = otherFn;
+              return _this["class"].prototype[camelize(type, _arg)] = fn;
+            case 'object':
+              return _this["class"].prototype[camelize(type, _arg)] = fn;
+            default:
+              return _this["class"].prototype[_arg] = fn;
+          }
+        })(arg));
       }
-      return this["class"].prototype.baseParams = baseParams;
+      return _results;
     };
 
     Builder.prototype.get = function() {
-      var arg, args, _i, _len, _results;
+      var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      _results = [];
-      for (_i = 0, _len = args.length; _i < _len; _i++) {
-        arg = args[_i];
-        _results.push(this["class"].prototype[arg] = function(data) {
-          return this.get(arg, data);
-        });
-      }
-      return _results;
+      args.unshift('get');
+      return this.define.apply(this, args);
     };
 
     Builder.prototype.post = function() {
-      var arg, args, _i, _len, _results;
+      var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      _results = [];
-      for (_i = 0, _len = args.length; _i < _len; _i++) {
-        arg = args[_i];
-        _results.push(this["class"].prototype[arg] = function(data) {
-          return this.post(arg, data);
-        });
-      }
-      return _results;
+      args.unshift('post');
+      return this.define.apply(this, args);
+    };
+
+    Builder.prototype.put = function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      args.unshift('put');
+      return this.define.apply(this, args);
     };
 
     return Builder;

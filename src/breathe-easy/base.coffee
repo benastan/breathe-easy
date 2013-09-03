@@ -24,24 +24,58 @@ class Base
     ajaxOptions =
 
       type: type
-      url: @url.apply(@, @baseParams().concat(urlArgs))
-      data: data
+      url: @url.apply(@, urlArgs)
+      data: @processData(data)
+
+    ajaxOptions = @alterXHROptions(ajaxOptions)
 
     xhr = $.ajax(ajaxOptions)
 
-    @beforeSend(xhr)
-
     xhr
+
+  processData: (data) -> data
+
+  urlBase: (urlArgs...) ->
+
+    params = @baseParams
+
+    params = params.concat(urlArgs) if urlArgs.length
+
+    base = []
+
+    for param in params
+
+      base.push(
+
+        if typeof param is 'function'
+
+          param.apply(@)
+
+        else
+
+          param
+
+      )
+
+    base
+
+  url: (args...) ->
+
+    [ @client.endpoint ].concat(@urlBase(args...)).join('/')
 
   post: (urlArgs...) ->
 
     @perform.apply(@, ['post'].concat(urlArgs))
 
+  put: (urlArgs...) ->
+
+    @perform.apply(@, ['put'].concat(urlArgs))
+
   get: (urlArgs...) ->
 
     @perform.apply(@, ['get'].concat(urlArgs))
 
-  beforeSend: (xhr) -> # Implement in subclasses.
+  alterXHROptions: (xhr) -> # Implement in subclasses.
 
   Builder: require('./builder')
 

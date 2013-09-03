@@ -7,7 +7,7 @@
   },
   "main": "dist/breathe-easy.js",
   "scripts": {
-    "test": "npm test"
+    "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs public/index.html"
   },
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "dependencies": {
     "browserify": "*",
     "chai": "*",
-    "grunt": "*",
+    "grunt-cli": "*",
     "grunt-browserify": "*",
     "grunt-contrib-coffee": "*",
     "grunt-contrib-compress": "*",
@@ -24,6 +24,10 @@
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
     "grunt-shell": "*",
+    "grunt-mocha": "*",
+    "grunt-env": "*",
+    "grunt-template": "*",
+    "mocha-phantomjs": "*",
     "mocha": "1.9.0"
   },
   "author": "Ben Bergstein",

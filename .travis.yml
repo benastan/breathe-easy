@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+- '0.11'
+before_script:
+- ./node_modules/grunt-cli/bin/grunt
+- ./node_modules/grunt-cli/bin/grunt test
+env:
+  global:
+    secure: jB7cSeliUlSref42ruua37U7OOMEnX6ZXFMXJCz4tbOYG+qEEZZc2waddeJ2KL/TNM5wTTf+hUIlthubqAElW/AoqezHG/q5r0Zv4GRzoqkSxBZ0663qHJEzTNU2yXrirgmBvCACsYN5PL6sotmQiG0471VB2S056AGFUc1gE/8=

@@ -1,43 +1,76 @@
 class Builder
 
-  constructor: ({@class}) ->
-
   base: (baseParams...) ->
 
-    if typeof baseParams[0] is 'function'
+    params = []
+
+    if typeof baseParams[0] isnt 'function' && typeof baseParams[0] isnt 'string'
 
       baseParams = baseParams[0]
 
+    while param = baseParams.shift()
+
+      if typeof param isnt 'function'
+
+        param = ((_param) -> _param)(param)
+
+      params.push(param)
+
+    if typeof @class::baseParams isnt 'undefined'
+
+      @class::baseParams = @class::baseParams.concat(params)
+
     else
 
-      baseParams = -> baseParams
+      @class::baseParams = params
 
-    if typeof @class::baseParams is 'function'
+  constructor: ({@class}) ->
 
-      ((superBase, subBase) ->
+  data: (cb) ->
 
-        baseParams = ->
+    @class::processData = (data) ->
 
-          while typeof superBase is 'function'
+      cb.apply(@, [data])
 
-            superBase = superBase.apply(@)
+  define: (type, args...) ->
 
-          superBase.concat(subBase.apply(@))
+    for arg in args
 
-      )(@class::baseParams, baseParams)
+      ((_arg) =>
 
-    @class::baseParams = baseParams
+        fn = (data) -> @[type](_arg, data)
+        fn.type = type
+
+        camelize = (type, arg) ->
+
+          "#{type}#{arg[0].toUpperCase()}#{arg.substr(1)}"
+
+        switch typeof @class::[_arg]
+
+          when 'function'
+
+            otherFn = @class::[_arg]
+
+            @class::[camelize(otherFn.type, _arg)] = otherFn
+            @class::[camelize(type, _arg)] = fn
+
+          when 'object'
+
+            @class::[camelize(type, _arg)] = fn
+
+          else
+
+            @class::[_arg] = fn
+      )(arg)
 
   get: (args...) ->
-
-    for arg in args
-
-      @class::[arg] = (data) -> @get(arg, data)
-
+    args.unshift('get')
+    @define.apply(@, args)
   post: (args...) ->
-
-    for arg in args
-
-      @class::[arg] = (data) -> @post(arg, data)
+    args.unshift('post')
+    @define.apply(@, args)
+  put: (args...) ->
+    args.unshift('put')
+    @define.apply(@, args)
 
 module.exports = Builder
