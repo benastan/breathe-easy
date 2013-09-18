@@ -63,7 +63,13 @@ class Builder
             @class::[_arg] = fn
       )(arg)
 
+  delete: (args...) ->
+
+    args.unshift('delete')
+    @define.apply(@, args)
+
   get: (args...) ->
+
     args.unshift('get')
     @define.apply(@, args)
 
@@ -75,11 +81,22 @@ class Builder
 
     @class::setup = setup
 
+  patch: (args...) ->
+
+    args.unshift('patch')
+    @define.apply(@, args)
+
   post: (args...) ->
+
     args.unshift('post')
     @define.apply(@, args)
 
+  proto: (proto) ->
+
+    proto.apply(@class::)
+
   put: (args...) ->
+
     args.unshift('put')
     @define.apply(@, args)
 

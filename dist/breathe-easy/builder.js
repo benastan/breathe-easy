@@ -66,6 +66,13 @@
       return _results;
     };
 
+    Builder.prototype["delete"] = function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      args.unshift('delete');
+      return this.define.apply(this, args);
+    };
+
     Builder.prototype.get = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -81,11 +88,22 @@
       return this["class"].prototype.setup = setup;
     };
 
+    Builder.prototype.patch = function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      args.unshift('patch');
+      return this.define.apply(this, args);
+    };
+
     Builder.prototype.post = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       args.unshift('post');
       return this.define.apply(this, args);
+    };
+
+    Builder.prototype.proto = function(proto) {
+      return proto.apply(this["class"].prototype);
     };
 
     Builder.prototype.put = function() {
