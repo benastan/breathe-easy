@@ -83,6 +83,14 @@ class Base
 
     @perform.apply(@, ['get'].concat(urlArgs))
 
+  patch: (urlArgs...) ->
+
+    @perform.apply(@, ['patch'].concat(urlArgs))
+
+  delete: (urlArgs...) ->
+
+    @perform.apply(@, ['delete'].concat(urlArgs))
+
   alterXHROptions: (options) -> options # Implement in subclasses.
 
   Builder: require('./builder')

@@ -81,6 +81,18 @@
       return this.perform.apply(this, ['get'].concat(urlArgs));
     };
 
+    Base.prototype.patch = function() {
+      var urlArgs;
+      urlArgs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this.perform.apply(this, ['patch'].concat(urlArgs));
+    };
+
+    Base.prototype["delete"] = function() {
+      var urlArgs;
+      urlArgs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this.perform.apply(this, ['delete'].concat(urlArgs));
+    };
+
     Base.prototype.alterXHROptions = function(options) {
       return options;
     };
